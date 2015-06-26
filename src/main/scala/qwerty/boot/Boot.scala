@@ -4,7 +4,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
-import qwerty.services.ServiceActor
+import qwerty.actors.ServiceActor
 import spray.can.Http
 
 import scala.concurrent.duration._
