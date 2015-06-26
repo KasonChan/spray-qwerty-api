@@ -27,7 +27,7 @@ trait Service extends HttpService with Users {
       path("users") {
         get {
           complete {
-            val messages = """{"messages":["Welcome to Qwerty API"]}""".parseJson.prettyPrint
+            val messages = """{"messages":["Users"]}""".parseJson.prettyPrint
             HttpResponse(
               StatusCodes.OK,
               HttpEntity(ContentTypes.`application/json`, messages))
