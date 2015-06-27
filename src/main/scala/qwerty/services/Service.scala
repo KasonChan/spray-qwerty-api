@@ -1,10 +1,6 @@
 package qwerty.services
 
-import qwerty.controllers.Users
-import qwerty.models.Messages
-import qwerty.protocols.MessagesProtocol._
-import spray.http.{HttpResponse, StatusCodes, _}
-import spray.json._
+import qwerty.controllers._
 import spray.routing._
 import spray.util.LoggingContext
 
@@ -12,19 +8,14 @@ import spray.util.LoggingContext
  * Created by ka-son on 6/25/15.
  */
 // This trait defines the qwerty.service behavior independently from the qwerty.service actor
-trait Service extends HttpService with Users {
+trait Service extends Application with HttpService with Users {
 
   def route(implicit log: LoggingContext) = {
 
     path("") {
       get {
         complete {
-          val messages = Messages(Seq("Welcome to Qwerty API")).toJson
-          log.info(messages.compactPrint)
-          HttpResponse(
-            StatusCodes.OK,
-            HttpEntity(ContentTypes.`application/json`, messages.prettyPrint)
-          )
+          root
         }
       }
     } ~
@@ -32,43 +23,20 @@ trait Service extends HttpService with Users {
         pathEnd {
           get {
             complete {
-              val messages = Messages(Seq("PathPrefix pathEnd get")).toJson
-              log.info(messages.compactPrint)
-              HttpResponse(
-                StatusCodes.NotFound,
-                HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
+              find
             }
           } ~
             post {
               complete {
-                val messages = Messages(Seq("PathPrefix pathEnd post")).toJson
-                log.info(messages.compactPrint)
-                HttpResponse(
-                  StatusCodes.NotFound,
-                  HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
+                create
               }
             }
-        } ~
-          path("users") {
-            get {
-              complete {
-                val messages = Messages(Seq("PathPrefix users get")).toJson
-                log.info(messages.compactPrint)
-                HttpResponse(
-                  StatusCodes.OK,
-                  HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
-              }
-            }
-          }
+        }
       } ~
       pathPrefix("") {
         (get | post | put | delete | patch) {
           complete {
-            val messages = Messages(Seq("Not found")).toJson
-            log.info(messages.compactPrint)
-            HttpResponse(
-              StatusCodes.NotFound,
-              HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
+            notFound
           }
         }
       }

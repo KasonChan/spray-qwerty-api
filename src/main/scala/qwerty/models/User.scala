@@ -3,12 +3,10 @@ package qwerty.models
 /**
  * Created by kasonchan on 6/26/15.
  */
-case class Login(login: String,
-                 email: String,
-                 password: String,
-                 token: String)
-
-case class Info(login: String,
+case class User(login: String,
+                email: String,
+                password: String,
+                token: String,
                 name: String,
                 category: String,
                 location: String,
