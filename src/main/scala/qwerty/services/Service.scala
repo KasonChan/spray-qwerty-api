@@ -3,9 +3,10 @@ package qwerty.services
 import qwerty.controllers.Users
 import qwerty.models.Messages
 import qwerty.protocols.MessagesProtocol._
-import spray.http._
+import spray.http.{HttpResponse, StatusCodes, _}
 import spray.json._
 import spray.routing._
+import spray.util.LoggingContext
 
 /**
  * Created by ka-son on 6/25/15.
@@ -13,12 +14,13 @@ import spray.routing._
 // This trait defines the qwerty.service behavior independently from the qwerty.service actor
 trait Service extends HttpService with Users {
 
-  def route = {
+  def route(implicit log: LoggingContext) = {
 
     path("") {
       get {
         complete {
           val messages = Messages(Seq("Welcome to Qwerty API")).toJson
+          log.info(messages.compactPrint)
           HttpResponse(
             StatusCodes.OK,
             HttpEntity(ContentTypes.`application/json`, messages.prettyPrint)
@@ -31,6 +33,7 @@ trait Service extends HttpService with Users {
           get {
             complete {
               val messages = Messages(Seq("PathPrefix pathEnd get")).toJson
+              log.info(messages.compactPrint)
               HttpResponse(
                 StatusCodes.NotFound,
                 HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
@@ -39,6 +42,7 @@ trait Service extends HttpService with Users {
             post {
               complete {
                 val messages = Messages(Seq("PathPrefix pathEnd post")).toJson
+                log.info(messages.compactPrint)
                 HttpResponse(
                   StatusCodes.NotFound,
                   HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
@@ -49,6 +53,7 @@ trait Service extends HttpService with Users {
             get {
               complete {
                 val messages = Messages(Seq("PathPrefix users get")).toJson
+                log.info(messages.compactPrint)
                 HttpResponse(
                   StatusCodes.OK,
                   HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
@@ -60,7 +65,7 @@ trait Service extends HttpService with Users {
         (get | post | put | delete | patch) {
           complete {
             val messages = Messages(Seq("Not found")).toJson
-            //            log.info(messages.compactPrint)
+            log.info(messages.compactPrint)
             HttpResponse(
               StatusCodes.NotFound,
               HttpEntity(ContentTypes.`application/json`, messages.prettyPrint))
