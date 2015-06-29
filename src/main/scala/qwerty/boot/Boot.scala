@@ -20,7 +20,7 @@ object Boot extends App {
   // Create and start service supervisor
   val service = system.actorOf(Props[ServiceSupervisor], "service")
 
-  implicit val timeout = Timeout(1.minute)
+  implicit val timeout = Timeout(5.minute)
 
   // Start a new HTTP server on port 9000 with the service supervisor actor as
   // the handler
