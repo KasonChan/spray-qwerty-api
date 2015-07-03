@@ -1,7 +1,7 @@
 package qwerty.services
 
 import qwerty.controllers._
-import qwerty.models.User
+import qwerty.models.UserInfo
 import qwerty.protocols.UserProtocol._
 import spray.routing._
 import spray.util.LoggingContext
@@ -14,30 +14,41 @@ trait Service extends Application with HttpService with Users {
 
   def route(implicit log: LoggingContext) = {
 
-    path("") {
-      get {
-        complete {
-          root
-        }
-      }
-    } ~
-      pathPrefix("users") {
+    pathPrefix("api") {
+      pathPrefix("v0.1") {
         pathEnd {
           get {
             complete {
-              find
+              root
             }
-          } ~
-            post {
-              entity(as[User]) { user =>
-                println(user)
+          }
+        } ~
+          pathPrefix("users") {
+            pathEnd {
+              get {
                 complete {
-                  create
+                  findAll
                 }
-              }
+              } ~
+                post {
+                  entity(as[UserInfo]) { info =>
+                    println(info)
+                    complete {
+                      create
+                    }
+                  }
+                }
             }
-        }
+          }
       } ~
+        pathPrefix("") {
+          (get | post | put | delete | patch) {
+            complete {
+              notFound
+            }
+          }
+        }
+    } ~
       pathPrefix("") {
         (get | post | put | delete | patch) {
           complete {

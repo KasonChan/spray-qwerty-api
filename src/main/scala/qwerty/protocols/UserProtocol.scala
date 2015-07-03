@@ -1,6 +1,6 @@
 package qwerty.protocols
 
-import qwerty.models.User
+import qwerty.models.UserInfo
 import spray.httpx.SprayJsonSupport
 import spray.json.DefaultJsonProtocol
 
@@ -9,6 +9,6 @@ import spray.json.DefaultJsonProtocol
  */
 object UserProtocol extends DefaultJsonProtocol with SprayJsonSupport {
 
-  implicit val userFormat = jsonFormat11(User)
+  implicit val userFormat = jsonFormat9(UserInfo)
 
 }

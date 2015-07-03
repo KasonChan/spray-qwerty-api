@@ -15,8 +15,16 @@ class ServiceSpec extends Specification with Specs2RouteTest with Service {
 
   def actorRefFactory = system
 
-  "/ must be 200 Ok" in {
+  "/ must be 404 Not found" in {
     Get() ~> route ~> check {
+      response.status must be(NotFound)
+      val expectedResponse = Messages(Seq("Not found")).toJson
+      responseAs[String] must beEqualTo(expectedResponse.prettyPrint)
+    }
+  }
+
+  "/api/v0.1 must be 200" in {
+    Get("/api/v0.1") ~> route ~> check {
       response.status must be(OK)
       val expectedResponse = Messages(Seq("Welcome to Qwerty API")).toJson
       responseAs[String] must beEqualTo(expectedResponse.prettyPrint)
