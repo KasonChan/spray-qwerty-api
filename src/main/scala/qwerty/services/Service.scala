@@ -1,8 +1,8 @@
 package qwerty.services
 
 import qwerty.controllers._
-import qwerty.models.UserInfo
-import qwerty.protocols.UserProtocol._
+import qwerty.models.UserLogin
+import qwerty.protocols.UserLoginProtocol._
 import spray.routing._
 import spray.util.LoggingContext
 
@@ -31,10 +31,9 @@ trait Service extends Application with HttpService with Users {
                 }
               } ~
                 post {
-                  entity(as[UserInfo]) { info =>
-                    println(info)
+                  entity(as[UserLogin]) { login =>
                     complete {
-                      create
+                      create(login)
                     }
                   }
                 }

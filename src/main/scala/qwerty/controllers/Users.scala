@@ -1,8 +1,11 @@
 package qwerty.controllers
 
-import com.mongodb.casbah.commons.MongoDBObject
+import com.mongodb.util.JSON
 import qwerty.db.Boot
+import qwerty.models.UserLogin
+import qwerty.protocols.UserLoginProtocol._
 import spray.http.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
+import spray.json._
 import spray.routing.HttpService
 import spray.util.LoggingContext
 
@@ -21,15 +24,16 @@ trait Users extends HttpService with Boot {
       HttpEntity(ContentTypes.`application/json`, result.mkString("[", " , ", "]")))
   }
 
-  def create(implicit log: LoggingContext): HttpResponse = {
-    val o = MongoDBObject("hello" -> "world")
-    mongoCollUsers.insert(o)
-    val messages = o.toString
+  def create(userLogin: UserLogin)(implicit log: LoggingContext): HttpResponse = {
+    val ul = userLogin.toJson.compactPrint
 
-    log.info(messages)
+    val ulDBObject = JSON.parse(ul)
+    mongoCollUsers.insert(ul)
+
+    log.info(ul)
     HttpResponse(
       StatusCodes.Created,
-      HttpEntity(ContentTypes.`application/json`, messages))
+      HttpEntity(ContentTypes.`application/json`, ul))
   }
 
 }

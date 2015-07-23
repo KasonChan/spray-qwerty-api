@@ -7,7 +7,7 @@ import spray.json.DefaultJsonProtocol
 /**
  * Created by ka-son on 6/28/15.
  */
-object UserProtocol extends DefaultJsonProtocol with SprayJsonSupport {
+object UserInfoProtocol extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val userFormat = jsonFormat9(UserInfo)
 
