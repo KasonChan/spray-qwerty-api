@@ -27,7 +27,7 @@ trait Service extends Application with HttpService with Users {
             pathEnd {
               get {
                 complete {
-                  findAll
+                  getAll
                 }
               } ~
                 post {

@@ -1,7 +1,8 @@
 package qwerty.controllers
 
-import com.mongodb.casbah.commons.{Imports, MongoDBObject, TypeImports}
-import qwerty.db.Boot
+import com.mongodb.casbah.commons.TypeImports
+import qwerty.db.{Boot, Query}
+import qwerty.json.Extractor
 import qwerty.models.{Messages, UserLogin}
 import qwerty.protocols.MessagesProtocol._
 import spray.http.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
@@ -12,53 +13,39 @@ import spray.util.LoggingContext
 /**
  * Created by kasonchan on 6/26/15.
  */
-trait Users extends HttpService with Boot with Application {
+trait Users extends HttpService with Boot with Application with Query with Extractor {
 
-  def findAll(implicit log: LoggingContext): HttpResponse = {
-    mongoCollUsers.find()
-    val result = for {x <- mongoCollUsers} yield x
+  def getAll(implicit log: LoggingContext): HttpResponse = {
+    val result = findAll(mongoCollLogins)
 
-    log.info(result.mkString("[", " , ", "]"))
-    HttpResponse(
-      StatusCodes.OK,
-      HttpEntity(ContentTypes.`application/json`, result.mkString("[", " , ", "]")))
-  }
-
-  def findByLogin(ul: UserLogin): Option[TypeImports.DBObject] = {
-    val login = extractLogin(ul)
-
-    mongoCollUsers.findOne(login)
+    result.isEmpty match {
+      case true =>
+        notFound
+      case false =>
+        log.info(result.mkString("[", " , ", "]"))
+        HttpResponse(
+          StatusCodes.OK,
+          HttpEntity(ContentTypes.`application/json`, result.mkString("[", " , ", "]")))
+    }
   }
 
   def create(ul: UserLogin)(implicit log: LoggingContext): HttpResponse = {
-    findByLogin(ul) match {
+    findByLogin(mongoCollLogins)(ul) match {
       case Some(u: TypeImports.DBObject) =>
         val messages = Messages(Seq("Login is already existed")).toJson
+        log.info(messages.compactPrint)
         HttpResponse(
           StatusCodes.BadRequest,
           HttpEntity(ContentTypes.`application/json`, messages.prettyPrint)
         )
       case None =>
         val userLogin = extractAll(ul)
-
-        val result = mongoCollUsers.insert(userLogin)
-
+        val result = insert(mongoCollLogins)(userLogin)
         log.info(result.toString)
         HttpResponse(
           StatusCodes.Created,
           HttpEntity(ContentTypes.`application/json`, result.toString))
     }
-  }
-
-  def extractAll(userLogin: UserLogin): Imports.DBObject = {
-    MongoDBObject("login" -> userLogin.login,
-      "email" -> userLogin.email,
-      "password" -> userLogin.password,
-      "token" -> userLogin.token)
-  }
-
-  def extractLogin(userLogin: UserLogin): Imports.DBObject = {
-    MongoDBObject("login" -> userLogin.login)
   }
 
 }

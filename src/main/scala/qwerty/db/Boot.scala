@@ -17,7 +17,9 @@ trait Boot {
 
   val mongoDB = mongoClient("qwerty")
 
-  val mongoCollUsers = mongoDB("users")
+  val mongoCollLogins = mongoDB("logins")
+
+  val mongoCollInfos = mongoDB("infos")
 
   val mongoCollRooms = mongoDB("rooms")
 
