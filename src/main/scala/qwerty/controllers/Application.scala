@@ -30,4 +30,13 @@ trait Application extends HttpService {
     )
   }
 
+  def unauthorized(implicit log: LoggingContext): HttpResponse = {
+    val messages = Messages(Seq("Requires authentication")).toJson
+    log.info(messages.compactPrint)
+    HttpResponse(
+      StatusCodes.BadRequest,
+      HttpEntity(ContentTypes.`application/json`, messages.prettyPrint)
+    )
+  }
+
 }

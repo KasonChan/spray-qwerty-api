@@ -36,6 +36,11 @@ trait Service extends Application with HttpService with Users {
                       create(login)
                     }
                   }
+                } ~
+                post {
+                  complete {
+                    unauthorized
+                  }
                 }
             }
           }

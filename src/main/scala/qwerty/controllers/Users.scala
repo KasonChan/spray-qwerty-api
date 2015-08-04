@@ -7,13 +7,12 @@ import qwerty.models.{Messages, UserLogin}
 import qwerty.protocols.MessagesProtocol._
 import spray.http.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import spray.json._
-import spray.routing.HttpService
 import spray.util.LoggingContext
 
 /**
  * Created by kasonchan on 6/26/15.
  */
-trait Users extends HttpService with Boot with Application with Query with Extractor {
+trait Users extends Boot with Application with Query with Extractor {
 
   def getAll(implicit log: LoggingContext): HttpResponse = {
     val result = findAll(mongoCollLogins)
