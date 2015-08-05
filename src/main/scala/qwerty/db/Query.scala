@@ -9,7 +9,7 @@ import qwerty.models.UserLogin
 /**
  * Created by kasonchan on 7/23/15.
  */
-trait Query extends Extractor {
+trait Query extends Boot with Extractor {
 
   def findAll(coll: MongoCollection): Iterable[TypeImports.DBObject] = {
     coll.find()

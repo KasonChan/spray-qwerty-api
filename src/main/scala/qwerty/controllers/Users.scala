@@ -1,8 +1,7 @@
 package qwerty.controllers
 
 import com.mongodb.casbah.commons.TypeImports
-import qwerty.db.{Boot, Query}
-import qwerty.json.Extractor
+import qwerty.db.Query
 import qwerty.models.{Messages, UserLogin}
 import qwerty.protocols.MessagesProtocol._
 import spray.http.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
@@ -12,7 +11,7 @@ import spray.util.LoggingContext
 /**
  * Created by kasonchan on 6/26/15.
  */
-trait Users extends Boot with Application with Query with Extractor {
+trait Users extends Responses with Query {
 
   def getAll(implicit log: LoggingContext): HttpResponse = {
     val result = findAll(mongoCollLogins)

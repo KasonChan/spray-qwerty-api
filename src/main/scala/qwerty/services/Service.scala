@@ -3,14 +3,13 @@ package qwerty.services
 import qwerty.controllers._
 import qwerty.models.UserLogin
 import qwerty.protocols.UserLoginProtocol._
-import spray.routing._
 import spray.util.LoggingContext
 
 /**
  * Created by ka-son on 6/25/15.
  */
 // This trait defines the qwerty.service behavior independently from the qwerty.service actor
-trait Service extends Application with HttpService with Users {
+trait Service extends Responses with Users {
 
   def route(implicit log: LoggingContext) = {
 
@@ -39,7 +38,7 @@ trait Service extends Application with HttpService with Users {
                 } ~
                 post {
                   complete {
-                    unauthorized
+                    badRequest(Seq("Expects text/json or application/json body"))
                   }
                 }
             }
