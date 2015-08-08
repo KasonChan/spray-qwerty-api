@@ -1,4 +1,4 @@
-package qwerty
+package qwerty.roottest
 
 import org.specs2.mutable.Specification
 import qwerty.models.Messages
@@ -11,7 +11,7 @@ import spray.testkit.Specs2RouteTest
 /**
  * Created by ka-son on 6/25/15.
  */
-class ServiceSpec extends Specification with Specs2RouteTest with Service {
+class Get extends Specification with Specs2RouteTest with Service {
 
   def actorRefFactory = system
 
